@@ -1,0 +1,13 @@
+First Information Report (FIR)
+Police Station: {police_station}
+Date: {date}
+
+Complainant: {plaintiff}
+Accused: {defendant}
+
+Statement of Facts:
+{facts}
+
+Relief/Request:
+{relief}
+

@@ -1,0 +1,18 @@
+Charge Sheet
+Police Station: {police_station}
+Case No.: {case_number}
+
+Accused: {defendant}
+Complainant: {plaintiff}
+
+Charges under sections:
+{sections}
+
+Statement of facts:
+{facts}
+
+List of witnesses:
+{witnesses}
+
+Investigating Officer: {investigating_officer}
+

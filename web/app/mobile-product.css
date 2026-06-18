@@ -1,0 +1,218 @@
+/**
+ * Product-wide mobile / tablet optimizations (phones + small tablets).
+ * Desktop (lg: 1024px+) unchanged.
+ */
+@media (max-width: 1023px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Prevent iOS zoom on focus */
+  .le-input,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  .le-page-body {
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+  }
+
+  /* Touch-friendly controls in main content */
+  main button:not(.legal-tools-v2__nav-btn):not(.le-nav-item),
+  main .le-btn,
+  main a.le-btn,
+  main [role="tab"] {
+    min-height: 44px;
+  }
+
+  main .le-btn--sm,
+  main button.text-xs {
+    min-height: 40px;
+  }
+
+  /* Enterprise + Legal Tools: horizontal module nav */
+  .legal-tools-v2__shell {
+    flex-direction: column;
+  }
+
+  .legal-tools-v2__sidebar {
+    width: 100%;
+    max-width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid rgb(226 232 240 / 0.9);
+    flex-shrink: 0;
+  }
+
+  .legal-tools-v2__sidebar > .px-4 {
+    display: none;
+  }
+
+  .legal-tools-v2__sidebar-nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.35rem;
+    padding: 0.5rem 0.75rem;
+    max-height: none;
+  }
+
+  .legal-tools-v2__nav-btn {
+    width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+    min-height: 44px;
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+
+  .legal-tools-v2__main {
+    min-height: 0;
+    flex: 1;
+  }
+
+  .legal-tools-v2__body {
+    flex-direction: column;
+  }
+
+  .legal-tools-v2__intel {
+    display: none !important;
+  }
+
+  .ent-command-header {
+    min-height: auto;
+  }
+
+  .ent-command-header__inner {
+    padding: 0.75rem 0.875rem;
+  }
+
+  .ent-command-header__title {
+    font-size: 1.25rem;
+  }
+
+  .ent-command-header__status-mobile {
+    padding: 0 0.875rem 0.625rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ent-kpi-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .ent-kpi-tile {
+    padding: 0.75rem;
+  }
+
+  .ent-kpi-tile__value {
+    font-size: 1.25rem;
+  }
+
+  .ent-snapshot-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ent-queues-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ent-command-main,
+  .ent-dashboard-grid-primary {
+    grid-template-columns: 1fr;
+  }
+
+  .ent-activity-panel,
+  .ent-priorities-panel {
+    min-height: 240px;
+  }
+
+  .ent-dashboard-bottom {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Drafting: A4 page fits screen */
+  .legal-a4-canvas {
+    padding: 0.5rem !important;
+  }
+
+  .legal-a4-page {
+    width: 100% !important;
+    min-height: auto;
+    margin: 0 auto;
+  }
+
+  .legal-ruler-wrap {
+    display: none;
+  }
+
+  /* Modals / drawers */
+  [role="dialog"],
+  .fixed.inset-0.z-50 {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+      env(safe-area-inset-left);
+  }
+
+  /* Tables scroll horizontally */
+  table {
+    display: block;
+    max-width: 100%;
+  }
+
+  .le-table-wrap table {
+    display: table;
+    min-width: 520px;
+  }
+
+  /* Litigation tabs */
+  .touch-scroll-x {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .touch-scroll-x::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Chat bubbles */
+  .le-chat-bubble-user,
+  .le-chat-bubble-assistant {
+    max-width: 92vw;
+  }
+
+  /* Firm chat: stack panes on narrow screens */
+  .firm-chat-body {
+    flex-direction: column !important;
+  }
+
+  .firm-chat-sidebar {
+    max-height: 42vh;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .firm-chat-main {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .ent-kpi-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid.grid-cols-2.md\:grid-cols-5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

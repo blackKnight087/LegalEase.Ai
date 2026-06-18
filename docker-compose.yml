@@ -1,0 +1,170 @@
+# LegalEase production stack
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-legalease}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_DB: ${POSTGRES_DB:-legalease}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_postgres.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-legalease}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      LEGALEASE_DB_PATH: /data/legalease.db
+      DATABASE_URL: ${DATABASE_URL:-postgresql://legalease:changeme@postgres:5432/legalease}
+      SAAS_USE_POSTGRES_LEGACY: ${SAAS_USE_POSTGRES_LEGACY:-1}
+      SAAS_AUTO_POSTGRES_LEGACY: ${SAAS_AUTO_POSTGRES_LEGACY:-1}
+      REDIS_URL: redis://redis:6379/0
+      ML_USE_QUEUE: ${ML_USE_QUEUE:-1}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost,https://localhost}
+    volumes:
+      - app_data:/data
+      - ./Data:/app/Data
+      - ./faiss_indexes:/app/faiss_indexes
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    expose:
+      - "8000"
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 8G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/api/v1/health/live"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.web
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost/api}
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost/api}
+    depends_on:
+      api:
+        condition: service_healthy
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+
+  worker:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api
+    restart: unless-stopped
+    command: ["python", "scripts/ediscovery_worker.py"]
+    env_file: .env
+    environment:
+      LEGALEASE_DB_PATH: /data/legalease.db
+      DATABASE_URL: ${DATABASE_URL:-postgresql://legalease:changeme@postgres:5432/legalease}
+      SAAS_USE_POSTGRES_LEGACY: ${SAAS_USE_POSTGRES_LEGACY:-1}
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - app_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  ml-worker:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api
+    restart: unless-stopped
+    command: ["python", "scripts/ml_worker.py"]
+    env_file: .env
+    environment:
+      LEGALEASE_DB_PATH: /data/legalease.db
+      DATABASE_URL: ${DATABASE_URL:-postgresql://legalease:changeme@postgres:5432/legalease}
+      SAAS_USE_POSTGRES_LEGACY: ${SAAS_USE_POSTGRES_LEGACY:-1}
+      REDIS_URL: redis://redis:6379/0
+      ML_USE_QUEUE: ${ML_USE_QUEUE:-1}
+      FAISS_BASE_DIR: /app/faiss_indexes
+    volumes:
+      - app_data:/data
+      - ./Data:/app/Data
+      - ./faiss_indexes:/app/faiss_indexes
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+
+  nginx-ssl:
+    image: nginx:1.27-alpine
+    profiles: ["ssl"]
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/nginx-ssl.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  app_data:

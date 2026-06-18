@@ -1,0 +1,94 @@
+# LegalEase.AI Dependencies
+# =========================
+
+# Core Framework
+streamlit>=1.28.0
+python-dotenv>=1.0.0
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.6
+
+# PDF Processing
+PyPDF2>=3.0.0
+pdfplumber>=0.11.0
+PyMuPDF>=1.23.0
+Pillow>=10.0.0
+
+# OCR (scanned PDFs + chat image upload)
+easyocr>=1.7.0
+opencv-python-headless>=4.8.0
+
+# LangChain & Vector Store
+langchain>=0.1.0
+langchain-text-splitters>=0.0.1
+langchain-community>=0.0.1
+langchain-huggingface>=0.0.1
+faiss-cpu>=1.7.4
+
+# Embeddings & ML
+sentence-transformers>=2.2.0
+transformers>=4.30.0
+# CPU wheel by default; for NVIDIA GPU see docs/GPU_SETUP.md (cu124 torch + faster-whisper)
+torch>=2.0.0
+datasets>=2.14.0
+accelerate>=0.26.0
+peft>=0.10.0
+trl>=0.9.0
+
+# Translation
+deep-translator>=1.11.0
+
+# Database & Auth
+bcrypt>=4.0.0
+cryptography>=42.0.0
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.9
+alembic>=1.13.0
+sentry-sdk>=2.0.0
+redis>=5.0.0
+
+# NLP — hybrid PII (optional; tests mock if missing)
+spacy>=3.6.0
+
+# OCR fallback (optional tesseract path)
+pytesseract>=0.3.10
+rapidocr-onnxruntime>=1.3.0
+pdf2image>=1.16.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+psutil>=5.9.0
+
+# Visualization
+plotly>=5.15.0
+
+# Web Search — Gemini grounded (legacy duckduckgo kept as optional fallback)
+duckduckgo-search>=4.0.0
+ddgs>=9.0.0
+google-genai>=1.0.0
+
+# Date Extraction
+datefinder>=0.7.3
+
+# NLP (optional — not used in app.py; requires Python 3.10+ for latest spacy)
+# spacy>=3.6.0
+
+# Document Generation
+python-docx>=0.8.11
+fpdf2>=2.7.0
+
+# HTTP Requests (for LM Studio)
+requests>=2.31.0
+
+# Speech-to-text (lazy-loaded on first mic use; requires ffmpeg on PATH)
+faster-whisper>=1.0.0
+
+# Speech-to-text (faster-whisper; requires ffmpeg on PATH for webm/mp3)
+faster-whisper>=1.0.0
+
+# SaaS billing
+stripe>=8.0.0
+
+# Testing
+pytest>=7.4.0

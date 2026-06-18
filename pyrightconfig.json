@@ -1,0 +1,41 @@
+{
+  "include": [
+    "app.py",
+    "llms.py",
+    "rag.py",
+    "prompts.py",
+    "legal_tools.py",
+    "drafting.py",
+    "dynamic_app.py",
+    "utils"
+  ],
+  "exclude": [
+    "**/venv",
+    "**/.venv",
+    "**/.venv_win",
+    "**/env",
+    "**/__pycache__",
+    "**/site-packages",
+    "**/node_modules",
+    "**/.git",
+    "**/faiss_index_global",
+    "**/faiss_indexes",
+    "**/Data",
+    "**/draft_outputs"
+  ],
+  "ignore": [
+    "**/venv",
+    "**/.venv",
+    "**/.venv_win",
+    "**/env"
+  ],
+  "typeCheckingMode": "off",
+  "reportMissingImports": "none",
+  "reportMissingTypeStubs": "none",
+  "reportGeneralTypeIssues": "none",
+  "reportArgumentType": "none",
+  "reportAttributeAccessIssue": "none",
+  "reportCallIssue": "none",
+  "useLibraryCodeForTypes": false,
+  "pythonVersion": "3.12"
+}

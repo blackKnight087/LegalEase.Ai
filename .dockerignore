@@ -1,0 +1,14 @@
+.env
+.env.local
+web/.env.local
+**/.env.local
+legalease-deploy.tgz
+Data/
+faiss_indexes/
+web/node_modules/
+web/.next/
+.venv_win/
+.pytest_cache/
+__pycache__/
+*.pyc
+.git/

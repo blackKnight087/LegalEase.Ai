@@ -1,0 +1,12 @@
+flowchart TD
+  UI[web/app/(app)/page.tsx] --> H[web/hooks/useChat.ts]
+  H --> API[POST /api/v1/chat/stream]
+  API --> CHAT[backend/app/api/v1/endpoints/chat.py]
+  CHAT --> CS[backend/app/services/chat_service.py]
+  CS --> ROUTER[backend/app/services/mode_router.py]
+  ROUTER --> KB[rag.py + kb_pipeline.py]
+  ROUTER --> WEB[web intelligence/gemini]
+  KB --> META[response meta + citations]
+  WEB --> META
+  META --> STREAM[SSE token/meta events]
+  STREAM --> UI

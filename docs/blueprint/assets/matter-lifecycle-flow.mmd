@@ -1,0 +1,9 @@
+stateDiagram-v2
+  [*] --> Created
+  Created --> Active: add docs/tasks/hearings
+  Active --> ScopedChat: matter_id scoped requests
+  ScopedChat --> Active
+  Active --> Archived: DELETE /matters/{id}
+  Archived --> Active: POST /matters/{id}/restore
+  Archived --> Deleted: DELETE /matters/{id}?hard=true
+  Deleted --> [*]

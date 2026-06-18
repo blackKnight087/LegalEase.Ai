@@ -1,0 +1,36 @@
+# LegalEase FastAPI backend
+FROM python:3.12-slim-bookworm
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libgl1 \
+    libglib2.0-0 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+COPY deploy/docker-entrypoint-api.sh /docker-entrypoint.sh
+
+RUN sed -i 's/\r$//' /docker-entrypoint.sh \
+    && useradd -m -u 10001 appuser \
+    && mkdir -p /data /data/Data \
+    && chmod +x /docker-entrypoint.sh \
+    && chown -R appuser:appuser /app /data /docker-entrypoint.sh
+
+ENV PYTHONUNBUFFERED=1
+ENV LEGALEASE_DB_PATH=/data/legalease.db
+ENV DATA_DIR=/data/Data
+
+USER appuser
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD curl -f http://127.0.0.1:8000/api/v1/health/live || exit 1
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -1,0 +1,66 @@
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
+backend/.env
+web/.env.local
+scripts/.env.rotation.generated
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.venv_win/
+myenv/
+*.egg-info/
+.mypy_cache/
+
+# Node
+node_modules/
+**/node_modules/
+web/node_modules/
+frontend/node_modules/
+tests/e2e/node_modules/
+web/.next/
+web/out/
+frontend/dist/
+frontend/.next/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
+
+# Runtime data — too large / private for GitHub
+Data/
+faiss_indexes/
+faiss_index/
+faiss_index_global/
+faiss_test_tmp/
+faiss_test_tmp2/
+faiss_test_tmp3/
+uploads/
+checkpoints/
+draft_outputs/
+models/
+
+# Databases & deploy artifacts
+*.db
+*.db-wal
+*.db-journal
+legalease-deploy.tgz
+legalease-deploy-test.tgz
+
+# Debug / session logs
+debug-*.log
+*.log
+
+# Misc large or local-only
+legal ai final 69/
+ssh/
+assets/c__Users_*

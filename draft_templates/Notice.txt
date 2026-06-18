@@ -1,0 +1,20 @@
+Legal Notice
+Date: {date}
+
+To,
+{defendant}
+
+From,
+{plaintiff}
+
+Subject: {subject}
+
+Dear {defendant},
+
+This notice is to inform you that {facts}
+
+You are hereby called upon to remedy the above within {days} days, failing which appropriate legal action will be initiated.
+
+Sincerely,
+{plaintiff}
+

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #03060c; }
+  .cin-root {
+    position: relative;
+    width: 100%;
+    min-height: 240px;
+    height: 280px;
+    max-height: 300px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #03060c;
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    box-shadow: 0 32px 70px rgba(0, 0, 0, 0.65);
+  }
+  /* Phase 1 � Dormant archive (0�2s) */
+  .cin-void {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 80%, #0a1424 0%, #03060c 72%);
+    animation: voidPulse 8s ease-in-out infinite;
+  }
+  .cin-fog {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 28% 38%, rgba(30, 58, 95, 0.22) 0%, transparent 52%),
+                radial-gradient(circle at 72% 62%, rgba(59, 130, 246, 0.1) 0%, transparent 48%);
+    opacity: 0;
+    animation: fogSlow 2.4s ease 0s forwards;
+  }
+  .cin-grid {
+    position: absolute; inset: 0; opacity: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 52px 52px;
+    animation: gridAwaken 2.2s ease 0.4s forwards;
+  }
+  .cin-manuscript {
+    position: absolute; inset: 0; opacity: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 32px, rgba(255,255,255,0.012) 32px, rgba(255,255,255,0.012) 33px);
+    animation: gridAwaken 2.6s ease 0.6s forwards;
+  }
+  .cin-particles span {
+    position: absolute; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(96, 165, 250, 0.45);
+    opacity: 0;
+    animation: particleDrift 14s ease-in-out infinite;
+  }
+  .cin-particles span:nth-child(1) { left: 8%; top: 18%; animation-delay: 0.8s; }
+  .cin-particles span:nth-child(2) { left: 22%; top: 70%; animation-delay: 2.2s; }
+  .cin-particles span:nth-child(3) { left: 48%; top: 28%; animation-delay: 1.6s; }
+  .cin-particles span:nth-child(4) { left: 68%; top: 48%; animation-delay: 2.8s; }
+  .cin-particles span:nth-child(5) { left: 84%; top: 22%; animation-delay: 3.4s; }
+  .cin-particles span:nth-child(6) { left: 36%; top: 80%; animation-delay: 2s; }
+  .cin-particles span:nth-child(7) { left: 14%; top: 42%; animation-delay: 3.8s; }
+  .cin-particles span:nth-child(8) { left: 58%; top: 14%; animation-delay: 3.2s; }
+  .cin-particles span:nth-child(9) { left: 76%; top: 74%; animation-delay: 4.2s; }
+  .cin-particles span:nth-child(10) { left: 44%; top: 54%; animation-delay: 2.6s; }
+  .cin-particles span:nth-child(11) { left: 92%; top: 58%; animation-delay: 4.8s; width: 2px; height: 2px; }
+  .cin-particles span:nth-child(12) { left: 52%; top: 8%; animation-delay: 1.2s; }
+
+  /* Phase 2�3 � Network awakening (2�6s) */
+  .cin-network {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0;
+    animation: networkPhase 2s ease 2s forwards;
+  }
+  .cin-network line {
+    stroke: rgba(96, 165, 250, 0.35);
+    stroke-width: 1;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: drawLine 3.2s ease 2.2s forwards;
+  }
+  .cin-network-2 {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0;
+    animation: networkPhase 2.2s ease 4s forwards;
+  }
+  .cin-network-2 line { stroke: rgba(96, 165, 250, 0.22); stroke-width: 0.8; stroke-dasharray: 160; stroke-dashoffset: 160; animation: drawLine 2.8s ease 4.2s forwards; }
+  .cin-network circle, .cin-network-2 circle {
+    fill: rgba(96, 165, 250, 0.75);
+    opacity: 0;
+    animation: nodeGlow 1s ease forwards;
+  }
+  .cin-network circle { animation-delay: 2.6s; }
+  .cin-network-2 circle { animation-delay: 4.4s; }
+  .cin-citation {
+    position: absolute; inset: 0; opacity: 0;
+    font-family: Inter, sans-serif; font-size: 9px; letter-spacing: 0.12em;
+    color: rgba(96, 165, 250, 0.12);
+    padding: 12% 8%;
+    line-height: 2.4;
+    animation: gridAwaken 2s ease 3.2s forwards;
+    pointer-events: none;
+  }
+  .cin-geometry {
+    position: absolute; left: 6%; top: 10%; width: 120px; height: 120px;
+    border: 1px solid rgba(96, 165, 250, 0.12); border-radius: 2px;
+    transform: rotate(45deg); opacity: 0;
+    animation: geoIn 1.8s ease 4.4s forwards;
+  }
+  .cin-geometry-2 {
+    position: absolute; right: 5%; bottom: 22%; width: 90px; height: 90px;
+    border: 1px solid rgba(96, 165, 250, 0.15); opacity: 0;
+    animation: geoIn 1.8s ease 4.8s forwards;
+  }
+  .cin-sweep, .cin-sweep-2, .cin-sweep-3 {
+    position: absolute; inset: -30% -50%; pointer-events: none;
+  }
+  .cin-sweep {
+    background: linear-gradient(100deg, transparent 44%, rgba(255,255,255,0.06) 50%, transparent 56%);
+    animation: sweepA 6s ease-in-out 2.5s infinite;
+  }
+  .cin-sweep-2 {
+    background: linear-gradient(80deg, transparent 42%, rgba(212,175,55,0.07) 50%, transparent 58%);
+    animation: sweepB 7s ease-in-out 4s infinite;
+  }
+  .cin-sweep-3 {
+    background: radial-gradient(ellipse at center, rgba(212,175,55,0.08) 0%, transparent 55%);
+    opacity: 0;
+    animation: sweepGlow 2s ease 6.4s forwards;
+  }
+
+  /* Phase 4 � Logo assembly (6�8s) */
+  .logo-stage {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    left: auto;
+    transform: none;
+    width: 72px;
+    height: 72px;
+    z-index: 12;
+  }
+  .logo-converge {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle, transparent 30%, rgba(212,175,55,0.04) 100%);
+    opacity: 0;
+    animation: convergePulse 1.8s ease 5.8s forwards;
+  }
+  .logo-line {
+    position: absolute; background: linear-gradient(90deg, transparent, rgba(212,175,55,0.5), transparent);
+    height: 1px; opacity: 0;
+    animation: lineIn 1.2s ease forwards;
+  }
+  .logo-line.l1 { width: 80px; left: 10%; top: 50%; animation-delay: 5.9s; transform: rotate(-25deg); }
+  .logo-line.l2 { width: 70px; right: 8%; top: 45%; animation-delay: 6.05s; transform: rotate(20deg); }
+  .logo-line.l3 { width: 60px; left: 45%; top: 8%; animation-delay: 6.15s; transform: rotate(90deg); }
+  .logo-line.l4 { width: 65px; left: 42%; bottom: 12%; animation-delay: 6.25s; transform: rotate(90deg); }
+  .logo-glow-ring {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px; height: 68px; border-radius: 50%;
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    opacity: 0;
+    animation: ringExpand 1.6s ease 6.5s forwards;
+  }
+  .logo-glow-core {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px; height: 56px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,175,55,0.35) 0%, transparent 70%);
+    opacity: 0;
+    animation: coreGlow 2.5s ease-in-out 6.8s infinite;
+  }
+  .logo-final {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px; height: 52px;
+    object-fit: contain;
+    opacity: 0;
+    filter: blur(18px) brightness(0.4);
+    animation: logoSeal 2.2s cubic-bezier(0.22, 1, 0.36, 1) 6.3s forwards;
+  }
+
+  /* Phase 5 � Title (8�10s) */
+  .cin-copy {
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    bottom: 8%;
+    text-align: center;
+    z-index: 10;
+  }
+  .cin-kicker {
+    font-family: Inter, sans-serif; font-size: 0.65rem;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: rgba(200, 214, 235, 0.55);
+    opacity: 0; transform: translateY(16px);
+    animation: copyUp 1.4s cubic-bezier(0.22, 1, 0.36, 1) 8.2s forwards;
+  }
+  .cin-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.65rem, 3.5vw, 2.55rem);
+    font-weight: 600; font-style: normal;
+    line-height: 1.18; color: #faf8f2;
+    margin: 0.7rem 0 0.55rem;
+    opacity: 0; transform: translateY(22px);
+    animation: copyUp 1.6s cubic-bezier(0.22, 1, 0.36, 1) 8.7s forwards;
+    text-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+  }
+  .cin-subline {
+    font-family: Inter, sans-serif; font-size: 0.9rem; font-weight: 300;
+    color: rgba(210, 220, 235, 0.78);
+    max-width: 40em; margin: 0 auto; line-height: 1.65;
+    opacity: 0; transform: translateY(16px);
+    animation: copyUp 1.3s cubic-bezier(0.22, 1, 0.36, 1) 9.3s forwards;
+  }
+  .cin-chips {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 0.55rem; margin-top: 1rem;
+  }
+  .cin-chip {
+    font-size: 0.74rem; padding: 0.42rem 0.85rem; border-radius: 10px;
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    color: #e8edf5;
+    background: linear-gradient(145deg, rgba(59,130,246,0.12) 0%, rgba(8,14,28,0.75) 100%);
+    opacity: 0; transform: translateY(12px);
+    animation: chipReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .cin-chip strong { color: #93c5fd; font-weight: 600; }
+  .cin-chip:nth-child(1) { animation-delay: 9.55s; }
+  .cin-chip:nth-child(2) { animation-delay: 9.75s; }
+  .cin-chip:nth-child(3) { animation-delay: 9.95s; }
+  .cin-vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.65);
+  }
+  .cin-depth-fog {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(3,6,12,0.3) 0%, transparent 35%, transparent 65%, rgba(3,6,12,0.5) 100%);
+    pointer-events: none;
+  }
+
+  @keyframes voidPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.92; } }
+  @keyframes fogSlow { to { opacity: 0.85; } }
+  @keyframes gridAwaken { to { opacity: 0.22; } }
+  @keyframes particleDrift {
+    0%, 100% { opacity: 0; transform: translate(0, 0); }
+    15% { opacity: 0.5; }
+    50% { opacity: 0.8; transform: translate(4px, -14px); }
+    85% { opacity: 0.25; }
+  }
+  @keyframes networkPhase { to { opacity: 1; } }
+  @keyframes drawLine { to { stroke-dashoffset: 0; } }
+  @keyframes nodeGlow { to { opacity: 1; } }
+  @keyframes geoIn { to { opacity: 0.45; } }
+  @keyframes sweepA {
+    0% { transform: translateX(-70%); opacity: 0; }
+    20% { opacity: 0.4; }
+    60% { transform: translateX(70%); opacity: 0.25; }
+    100% { transform: translateX(70%); opacity: 0; }
+  }
+  @keyframes sweepB {
+    0% { transform: translateX(70%); opacity: 0; }
+    25% { opacity: 0.35; }
+    65% { transform: translateX(-70%); opacity: 0.2; }
+    100% { transform: translateX(-70%); opacity: 0; }
+  }
+  @keyframes sweepGlow { to { opacity: 1; } }
+  @keyframes convergePulse { to { opacity: 1; } }
+  @keyframes lineIn { from { opacity: 0; width: 0; } to { opacity: 0.7; } }
+  @keyframes ringExpand {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    to { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes coreGlow {
+    0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.95); }
+    50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.08); }
+  }
+  @keyframes logoSeal {
+    0% { opacity: 0; filter: blur(20px) brightness(0.35); transform: translate(-50%, -50%) scale(0.82); }
+    45% { opacity: 0.85; filter: blur(6px) brightness(1.15); transform: translate(-50%, -50%) scale(1.04); }
+    100% { opacity: 1; filter: blur(0) brightness(1); transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes copyUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes chipReveal { to { opacity: 1; transform: translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; animation-delay: 0s !important; }
+  }
+</style>
+</head>
+<body>
+<div class="cin-root">
+  <div class="cin-void"></div>
+  <div class="cin-fog"></div>
+  <div class="cin-grid"></div>
+  <div class="cin-manuscript"></div>
+  <div class="cin-depth-fog"></div>
+  <div class="cin-particles">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="cin-citation">� � Art. � precedent � ratio � obiter � citation � constitutional � judgment � order � decree �</div>
+  <svg class="cin-network" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
+    <line x1="80" y1="60" x2="220" y2="120"/><line x1="220" y1="120" x2="400" y2="80"/>
+    <line x1="400" y1="80" x2="560" y2="140"/><line x1="560" y1="140" x2="720" y2="70"/>
+    <line x1="220" y1="120" x2="260" y2="280"/><line x1="400" y1="80" x2="360" y2="300"/>
+    <line x1="560" y1="140" x2="500" y2="320"/><line x1="140" y1="200" x2="260" y2="280"/>
+    <line x1="500" y1="320" x2="660" y2="260"/><line x1="300" y1="180" x2="400" y2="80"/>
+    <circle cx="80" cy="60" r="3"/><circle cx="220" cy="120" r="4"/><circle cx="400" cy="80" r="5"/>
+    <circle cx="560" cy="140" r="4"/><circle cx="720" cy="70" r="3"/><circle cx="260" cy="280" r="4"/>
+    <circle cx="360" cy="300" r="3"/><circle cx="500" cy="320" r="4"/><circle cx="140" cy="200" r="3"/>
+    <circle cx="660" cy="260" r="3"/><circle cx="300" cy="180" r="3"/>
+  </svg>
+  <svg class="cin-network-2" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
+    <line x1="160" y1="40" x2="320" y2="200"/><line x1="480" y1="40" x2="320" y2="200"/>
+    <line x1="320" y1="200" x2="320" y2="360"/><line x1="100" y1="340" x2="320" y2="360"/>
+    <line x1="540" y1="340" x2="320" y2="360"/><line x1="640" y1="180" x2="480" y2="40"/>
+    <circle cx="320" cy="200" r="5"/><circle cx="320" cy="360" r="4"/><circle cx="160" cy="40" r="3"/>
+    <circle cx="480" cy="40" r="3"/><circle cx="100" cy="340" r="3"/><circle cx="540" cy="340" r="3"/>
+  </svg>
+  <div class="cin-geometry"></div>
+  <div class="cin-geometry-2"></div>
+  <div class="cin-sweep"></div>
+  <div class="cin-sweep-2"></div>
+  <div class="cin-sweep-3"></div>
+  <div class="logo-stage">
+    <div class="logo-converge"></div>
+    <div class="logo-line l1"></div>
+    <div class="logo-line l2"></div>
+    <div class="logo-line l3"></div>
+    <div class="logo-line l4"></div>
+    <div class="logo-glow-ring"></div>
+    <div class="logo-glow-core"></div>
+    <img src="__LOGO_URI__" alt="LegalEase Scales of Justice" class="logo-final"/>
+  </div>
+  <div class="cin-copy">
+    <div class="cin-kicker">Your Ai Powered Legal Assistant</div>
+    <h1 class="cin-headline">The Intelligence Behind Modern Law.</h1>
+    <p class="cin-subline">Trusted legal intelligence grounded in precedent, constitutional reasoning, and citation-first analysis.</p>
+    <div class="cin-chips">
+      <span class="cin-chip"><strong>RAG-Based Intelligence</strong> - Answers grounded in your uploaded legal documents</span>
+      <span class="cin-chip"><strong>Verdict-Grade Citations</strong> - Source-locked precision on every claim</span>
+      <span class="cin-chip"><strong>Court-Trusted Scope</strong> - Legal-only intelligence, nothing else</span>
+    </div>
+  </div>
+  <div class="cin-vignette"></div>
+</div>
+</body>
+</html>

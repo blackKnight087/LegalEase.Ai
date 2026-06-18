@@ -1,0 +1,8 @@
+{
+  "index_chunks": 1,
+  "skills_query_scores": [
+    1.1640682220458984
+  ],
+  "top_chunk": "Yusuf Ahmed\nEmail: yusuf@example.com | Phone: +91-9876543210\n\nPROFESSIONAL SUMMARY\nSoftware engineer with 5 years of experience in backend systems and machine learning.\n\nCORE TECHNICAL SKILLS\nPython, SQL, Machine Learning, TensorFlow, PyTorch, Docker, Kubernetes, AWS, REST APIs, Git\n\nEXPERIENCE\nSenior Software Engineer \u2014 TechCorp India (2020\u20132024)\n- Built ML pipelines and microservices in Python.\n- Deployed services on Kubernetes with Docker.\n\nEDUCATION\nB.Tech Computer Science, IIT Delhi, 2019",
+  "not_found_phrase": "Information not found in uploaded document."
+}

@@ -1,0 +1,325 @@
+/* Reference LegalEase landing — dark sidebar + light 3×3 grid */
+
+.landing-page {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+.landing-sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #1a2332;
+  color: #f1f5f9;
+}
+
+.landing-sidebar-brand {
+  padding: 1.25rem 1.15rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.landing-sidebar-brand-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.landing-sidebar-brand-inner .legalease-logo-mark {
+  margin-bottom: 0.15rem;
+}
+
+/* Brand text comes from LegalEaseLogo component */
+
+.landing-auth-section {
+  padding: 1rem 1.15rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.landing-auth-heading {
+  font-family: "Inter", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin: 0 0 0.65rem;
+  text-transform: capitalize;
+}
+
+.landing-auth-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.landing-auth-link {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  text-align: left;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.landing-auth-link:hover {
+  color: #fff;
+}
+
+.landing-auth-link.active {
+  color: #eab308;
+  font-weight: 600;
+  border: 1px solid #d4af37;
+  background: rgba(212, 175, 55, 0.06);
+}
+
+.landing-auth-icon {
+  font-size: 0.9rem;
+  width: 1.1rem;
+  text-align: center;
+}
+
+.landing-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: auto;
+}
+
+.landing-auth-form label {
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #94a3b8;
+  margin-bottom: -0.3rem;
+}
+
+.landing-auth-form input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-family: "Inter", sans-serif;
+  font-size: 0.82rem;
+  box-sizing: border-box;
+}
+
+.landing-auth-form input:focus {
+  outline: none;
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 2px rgba(147, 197, 253, 0.35);
+}
+
+.landing-password-wrap {
+  position: relative;
+}
+
+.landing-password-wrap input {
+  padding-right: 2.25rem;
+}
+
+.landing-password-eye {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.15rem;
+  line-height: 1;
+  opacity: 0.65;
+}
+
+.landing-password-eye:hover {
+  opacity: 1;
+}
+
+.landing-auth-submit {
+  margin-top: 0.5rem;
+  padding: 0.55rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #e2e8f0;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  transition: color 0.2s;
+}
+
+.landing-auth-submit:hover:not(:disabled) {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.landing-auth-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.landing-auth-error {
+  font-size: 0.72rem;
+  color: #fca5a5;
+  margin: 0;
+}
+
+.landing-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f0f2f5;
+  overflow-y: auto;
+}
+
+.landing-main-inner {
+  flex: 1;
+  padding: 1.75rem 2rem 1rem;
+  max-width: 1050px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.landing-welcome {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.landing-welcome h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.65rem, 2.8vw, 2.1rem);
+  font-weight: 700;
+  color: #1d4ed8;
+  margin: 0;
+}
+
+.landing-welcome-scales {
+  font-size: 1.85rem;
+  line-height: 1;
+  filter: hue-rotate(10deg) saturate(1.2);
+}
+
+.landing-subtitle {
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 1.5rem;
+}
+
+.landing-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .landing-tool-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-page {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .landing-sidebar {
+    width: 100%;
+    min-width: 0;
+  }
+  .landing-tool-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* White cards — gold accent ONLY on left edge */
+.landing-feature-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1rem 1rem 1rem 1.1rem;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e5e7eb;
+  border-left: 3px solid #eab308;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.landing-feature-card:hover {
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.09);
+  transform: translateY(-2px);
+}
+
+.landing-feature-icon {
+  font-size: 1.35rem;
+  margin-bottom: 0.4rem;
+  line-height: 1;
+}
+
+.landing-feature-title {
+  font-family: "Inter", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.3rem;
+}
+
+.landing-feature-desc {
+  font-family: "Inter", sans-serif;
+  font-size: 0.78rem;
+  color: #6b7280;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.landing-banner {
+  padding: 0.75rem 1.5rem;
+  background: #dbeafe;
+  border-top: 1px solid #bfdbfe;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #1e3a8a;
+  flex-shrink: 0;
+}
+
+.landing-banner-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.landing-banner-link:hover {
+  color: #1d4ed8;
+}

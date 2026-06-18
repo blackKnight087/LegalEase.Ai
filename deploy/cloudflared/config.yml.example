@@ -1,0 +1,18 @@
+# Cloudflare Named Tunnel — stable public link (no paid domain)
+#
+# 1) Create free subdomain at https://freedns.afraid.org (e.g. legalease-demo.mooo.com)
+#    Type: CNAME → YOUR_TUNNEL_ID.cfargotunnel.com
+#
+# 2) Copy this file to:  %USERPROFILE%\.cloudflared\config.yml
+#    Or run:  .\scripts\setup_stable_cloudflare_tunnel.ps1
+#
+# 3) Start:  cloudflared tunnel run legalease-demo
+
+tunnel: legalease-demo
+credentials-file: C:\Users\YOUR_USER\.cloudflared\TUNNEL_ID.json
+
+ingress:
+  # Single entry — Next.js proxies /api to backend on localhost
+  - hostname: legalease-demo.mooo.com
+    service: http://127.0.0.1:3000
+  - service: http_status:404

@@ -1,0 +1,41 @@
+# AWS EC2 overlay — slim API image, 2 vCPU instances (m7i-flex.large may show 2 CPUs)
+services:
+  api:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api.aws
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      UVICORN_WORKERS: "1"
+      LEGALEEASE_HF_CACHE: /data/hf_cache
+      HF_HOME: /data/hf_cache
+      SAAS_PRODUCTION: ${SAAS_PRODUCTION:-1}
+      CLOUD_GEMINI_KB: "1"
+      LOW_RESOURCE_MODE: "1"
+      HF_EMBEDDING_MODEL: BAAI/bge-small-en-v1.5
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 4G
+
+  web:
+    build:
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost/api}
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 1536M
+
+  worker:
+    profiles: ["workers"]
+
+  ml-worker:
+    profiles: ["workers"]
+
+  nginx:
+    ports:
+      - "80:80"

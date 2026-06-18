@@ -1,0 +1,9 @@
+# Overlay: enable HTTPS on nginx (after deploy/nginx/ssl/cert.pem exists)
+services:
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/nginx-duckdns-https.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/nginx/ssl:/etc/nginx/ssl:ro

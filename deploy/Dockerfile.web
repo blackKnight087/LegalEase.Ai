@@ -1,0 +1,21 @@
+# LegalEase Next.js frontend
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY web/package.json web/package-lock.json* ./
+RUN npm ci
+COPY web/ .
+ARG NEXT_PUBLIC_API_URL=http://localhost/api
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+RUN addgroup -g 10001 -S nodeapp && adduser -S nodeapp -u 10001 -G nodeapp
+COPY --from=builder /app ./
+RUN chown -R nodeapp:nodeapp /app
+USER nodeapp
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:3000/ || exit 1
+CMD ["npm", "run", "start"]

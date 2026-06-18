@@ -1,0 +1,171 @@
+name: LegalEase CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Pytest (default — excludes slow + legacy_kb)
+        run: python -m pytest tests/ -q --tb=short -m "not slow and not legacy_kb"
+
+      - name: SaaS foundation tests (required gate)
+        run: |
+          python -m pytest tests/test_document_schema_fresh_db.py tests/test_tenant_isolation.py tests/test_crm_tenant_isolation.py tests/test_saas_days5_10.py tests/test_saas_day4_6.py tests/test_p0_saas.py tests/test_p1_ops.py tests/test_p2_saas.py tests/test_api_saas.py tests/test_kb_comparison.py::test_compare_intent_detection -q --tb=short
+        env:
+          KB_PIPELINE_DEBUG: "0"
+          RAG_ENABLE_CROSS_ENCODER: "0"
+
+      - name: KB trust + enterprise CI gate
+        run: python -m pytest tests/test_kb_trust_ci.py tests/test_enterprise_api_ci.py tests/test_tenant_attack_ci.py tests/test_feedback_learning.py tests/test_chat_routing.py tests/test_collab_presence.py tests/test_phase6_enterprise.py -q --tb=short -m ci_gate
+        env:
+          KB_PIPELINE_DEBUG: "0"
+          RAG_ENABLE_CROSS_ENCODER: "0"
+
+      - name: Nightly load test (optional)
+        continue-on-error: true
+        run: python scripts/load_test_chat.py --users 5
+
+      - name: Legacy KB tests (optional)
+        continue-on-error: true
+        run: python -m pytest tests/ -q --tb=short -m "legacy_kb and not slow"
+        env:
+          KB_PIPELINE_DEBUG: "0"
+          RAG_ENABLE_CROSS_ENCODER: "0"
+
+      - name: KB smoke (no index required)
+        run: python scripts/e2e_kb_smoke.py
+
+  api-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: legalease
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: legalease
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U legalease"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Start API
+        run: |
+          python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 &
+          sleep 12
+        env:
+          DATABASE_URL: postgresql://legalease:testpass@localhost:5432/legalease
+          SAAS_USE_POSTGRES_LEGACY: "1"
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET: ci_test_jwt_secret_min_32_chars_long_enough
+          LEGALEASE_API_SECRET: ci_test_jwt_secret_min_32_chars_long_enough
+
+      - name: SaaS API smoke
+        run: python scripts/e2e_saas_smoke.py
+        env:
+          E2E_API_URL: http://127.0.0.1:8000
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Production build
+        working-directory: web
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: http://127.0.0.1:8000
+
+  e2e-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: [frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install API deps
+        run: pip install -r requirements.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install web + Playwright
+        run: |
+          cd web && npm ci && npm run build
+          cd ../tests/e2e && npm ci && npx playwright install chromium --with-deps
+
+      - name: Start API and web
+        run: |
+          python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 &
+          cd web && npm run start &
+          sleep 20
+        env:
+          JWT_SECRET: ci_test_jwt_secret_min_32_chars_long_enough
+          LEGALEASE_API_SECRET: ci_test_jwt_secret_min_32_chars_long_enough
+          NEXT_PUBLIC_API_URL: http://127.0.0.1:8000
+
+      - name: Playwright smoke
+        working-directory: tests/e2e
+        run: npm test
+        env:
+          E2E_BASE_URL: http://127.0.0.1:3000
+          E2E_API_URL: http://127.0.0.1:8000

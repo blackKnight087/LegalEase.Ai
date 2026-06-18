@@ -1,0 +1,154 @@
+/* LegalEase cinematic login — 10s intro timeline */
+
+@keyframes cinBgReveal {
+  0% {
+    transform: scale(1.08);
+    filter: blur(18px);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+@keyframes cinBrandIn {
+  0% {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cinCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cinVaultIn {
+  0% {
+    opacity: 0;
+    transform: translateX(24px) scale(0.98);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes cinGoldPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes cinGridDrift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 52px 52px;
+  }
+}
+
+@keyframes cinShimmerBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.cin-bg-layer {
+  animation: cinBgReveal 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cin-brand-block {
+  opacity: 0;
+  animation: cinBrandIn 2s cubic-bezier(0.22, 1, 0.36, 1) 1.5s forwards;
+}
+
+.cin-feature-card {
+  opacity: 0;
+  animation: cinCardIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cin-vault-wrap {
+  opacity: 0;
+  animation: cinVaultIn 1.5s cubic-bezier(0.22, 1, 0.36, 1) 6s forwards;
+}
+
+.cin-vault-glow {
+  animation: cinGoldPulse 4s ease-in-out 6s infinite;
+}
+
+/* Border-lit micro-card: subtle amber edge on hover */
+.cin-feature-card-inner {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.cin-feature-card-inner::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    transparent 30%,
+    rgba(217, 119, 6, 0.15) 50%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.cin-feature-card-inner:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(217, 119, 6, 0.3);
+  box-shadow: 0 8px 30px rgba(217, 119, 6, 0.05);
+  transform: translateY(-2px);
+}
+
+.cin-feature-card-inner:hover::before {
+  opacity: 1;
+}
+
+.cin-bg-grid {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 52px 52px;
+  animation: cinGridDrift 24s linear infinite;
+  opacity: 0.5;
+}

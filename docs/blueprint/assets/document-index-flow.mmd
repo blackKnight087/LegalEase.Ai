@@ -1,0 +1,9 @@
+flowchart TD
+  U[Upload file] --> DAPI[/api/v1/documents/upload]
+  DAPI --> EXTRACT[PDF/OCR extraction]
+  EXTRACT --> SAVE[Persist metadata]
+  SAVE --> CHUNK[Chunk + embed]
+  CHUNK --> IDX[FAISS write by scope]
+  IDX --> JOB[index_jobs status]
+  JOB --> HEALTH[kb health/smoke endpoints]
+  HEALTH --> UI[Documents + Matter Dashboard]

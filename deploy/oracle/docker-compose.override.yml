@@ -1,0 +1,42 @@
+# Oracle Always Free overlay — Ollama on host, tuned for ARM CPU / 24GB RAM
+services:
+  api:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      LLM_BACKEND: ollama
+    deploy:
+      resources:
+        limits:
+          cpus: "3"
+          memory: 6G
+
+  ml-worker:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2G
+
+  web:
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1536M
+
+  worker:
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+  nginx:
+    ports:
+      - "80:80"

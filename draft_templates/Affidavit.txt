@@ -1,0 +1,11 @@
+Affidavit
+I, {plaintiff}, do hereby solemnly affirm and state as follows:
+
+1. That I am the {relation} in the matter titled {case_title}.
+2. That the facts stated herein are true to the best of my knowledge:
+{facts}
+
+Verified at {place} on {date}.
+
+Deponent: {plaintiff}
+
