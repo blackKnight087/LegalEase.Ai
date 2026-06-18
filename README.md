@@ -1,8 +1,14 @@
 # LegalEase — AI Legal Practice Platform
 
+> **Recruiter quick view:** [Live app](https://legalease.duckdns.org) · [Architecture doc](docs/LegalEase_System_Architecture.html) · `backend/` + `web/` + `tests/` in this repo
+
 Full-stack legal-tech SaaS for Indian law: RAG knowledge base, hybrid web intel, matter workspace, firm collaboration, and model-assisted drafting — deployed on AWS EC2 with PostgreSQL.
 
-**Live demo:** [https://legalease.duckdns.org](https://legalease.duckdns.org)
+| Link | What to open |
+|------|----------------|
+| **Live product** | [https://legalease.duckdns.org](https://legalease.duckdns.org) — register, try Knowledge Base / Firm Chat |
+| **This repo** | `backend/app/` (FastAPI), `web/` (Next.js), `tests/`, `deploy/` |
+| **Architecture** | [docs/LegalEase_System_Architecture.html](docs/LegalEase_System_Architecture.html) |
 
 ---
 
