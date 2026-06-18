@@ -1,10 +1,10 @@
 name: LegalEase CI
 
+# Manual / PR only — avoids failure emails on every push to main.
 on:
-  push:
-    branches: [main, master, develop]
   pull_request:
     branches: [main, master, develop]
+  workflow_dispatch:
 
 jobs:
   test:

@@ -1,8 +1,7 @@
 name: LegalEase Deploy
 
+# Manual CI only — does not deploy to EC2. Run from Actions tab when needed.
 on:
-  push:
-    branches: [main, master]
   workflow_dispatch:
 
 jobs:
@@ -20,6 +19,9 @@ jobs:
           pip install -r requirements.txt
       - run: python -m pytest tests/test_saas_day4_6.py tests/test_saas_production_guards.py tests/test_p0_saas.py tests/test_p1_ops.py tests/test_p2_saas.py -q --tb=short
         env:
+          JWT_SECRET: ci_test_jwt_secret_min_32_chars_long_enough
+          LEGALEASE_API_SECRET: ci_test_jwt_secret_min_32_chars_long_enough
+          SAAS_ALLOW_FREE_HYBRID: "0"
           KB_PIPELINE_DEBUG: "0"
           RAG_ENABLE_CROSS_ENCODER: "0"
 

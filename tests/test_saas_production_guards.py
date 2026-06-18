@@ -35,11 +35,15 @@ def test_production_config_requires_stripe(monkeypatch):
     assert any("STRIPE_SECRET_KEY" in e for e in errs)
 
 
-def test_plan_route_guard_hybrid():
+def test_plan_route_guard_hybrid(monkeypatch):
     from backend.app.core.plan_enforcement import apply_plan_route_guard
 
+    monkeypatch.setenv("SAAS_ALLOW_FREE_HYBRID", "0")
     assert apply_plan_route_guard("hybrid", "Free") == "knowledge_base"
     assert apply_plan_route_guard("hybrid", "Pro") == "hybrid"
+
+    monkeypatch.setenv("SAAS_ALLOW_FREE_HYBRID", "1")
+    assert apply_plan_route_guard("hybrid", "Free") == "hybrid"
 
 
 def test_document_limit_by_plan():
