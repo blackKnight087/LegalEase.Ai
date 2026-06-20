@@ -112,4 +112,6 @@ legacy_saas/     Auth helpers, early SaaS modules
 
 ## Author
 Yusuf Islam 
-Built as a Production grade  startup  legal-AI platform  — full-stack, production-deployed 
+```
+Built as a Production grade  startup  legal-AI platform  — full-stack, production-deployed
+```
