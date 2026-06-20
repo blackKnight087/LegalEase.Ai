@@ -111,5 +111,5 @@ legacy_saas/     Auth helpers, early SaaS modules
 ---
 
 ## Author
-
-Built as a capstone / portfolio legal-AI platform — full-stack, production-deployed, recruiter-ready codebase.
+Yusuf Islam 
+Built as a Production grade  startup  legal-AI platform  — full-stack, production-deployed 
